@@ -8,6 +8,11 @@
 <meta property="og:title" content="Calma Capital — Private Investment Firm"/>
 <meta property="og:description" content="Disciplined research. Selective opportunity. Long-term capital stewardship."/>
 <meta property="og:type" content="website"/>
+<meta property="og:image" content="https://calma-capital.vercel.app/og-image.png"/>
+<meta property="og:image:width" content="1200"/>
+<meta property="og:image:height" content="630"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://calma-capital.vercel.app/og-image.png"/>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=DM+Sans:wght@200;300;400;500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
 
@@ -1140,23 +1145,41 @@ const io = new IntersectionObserver(entries=>{
 document.querySelectorAll('.rv').forEach(el=>io.observe(el));
 
 /* ── CONTACT FORM ────────────────────────────────── */
-function submitForm(){
-  const name    = document.getElementById('f-name').value.trim();
-  const email   = document.getElementById('f-email').value.trim();
-  const nature  = document.getElementById('f-nature').value.trim();
-  const msg     = document.getElementById('f-msg').value.trim();
-  if(!name||!email){
+async function submitForm(){
+  const name   = document.getElementById('f-name').value.trim();
+  const email  = document.getElementById('f-email').value.trim();
+  const nature = document.getElementById('f-nature').value.trim();
+  const msg    = document.getElementById('f-msg').value.trim();
+
+  if(!name || !email){
     alert('Please enter your name and email address.');
     return;
   }
-  // Build mailto link
-  const subject = encodeURIComponent('Calma Capital Enquiry — '+nature);
-  const body = encodeURIComponent(
-    'Name: '+name+'\nEmail: '+email+'\nNature: '+nature+'\n\nMessage:\n'+msg
-  );
-  window.location.href='mailto:calmacapitalfirm@gmail.com?subject='+subject+'&body='+body;
-  document.getElementById('formContent').style.display='none';
-  document.getElementById('formSuccess').classList.add('visible');
+
+  const btn = document.querySelector('.f-submit');
+  btn.textContent = 'Sending…';
+  btn.disabled = true;
+
+  try {
+    const res = await fetch('https://formspree.io/f/mykvpyzk', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({ name, email, nature, message: msg })
+    });
+
+    if(res.ok){
+      document.getElementById('formContent').style.display = 'none';
+      document.getElementById('formSuccess').classList.add('visible');
+    } else {
+      btn.textContent = 'Submit Enquiry';
+      btn.disabled = false;
+      alert('Something went wrong. Please email us directly at calmacapitalfirm@gmail.com');
+    }
+  } catch(e) {
+    btn.textContent = 'Submit Enquiry';
+    btn.disabled = false;
+    alert('Network error. Please email us directly at calmacapitalfirm@gmail.com');
+  }
 }
 </script>
 </body>
