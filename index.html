@@ -9,1166 +9,731 @@
 <meta property="og:description" content="Disciplined research. Selective opportunity. Long-term capital stewardship."/>
 <meta property="og:type" content="website"/>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Mono:wght@300;400;500&family=Playfair+Display:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=DM+Sans:wght@200;300;400;500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+
 <style>
-/* ═══════════════════════════════════════════════
-   DESIGN TOKENS
-   ═══════════════════════════════════════════════ */
-:root {
-  --bg:           #f5f3ef;
-  --bg-alt:       #edeae4;
-  --ink:          #1a1a1a;
-  --ink-soft:     #3a3a3a;
-  --ink-muted:    #6b6b6b;
-  --ink-faint:    #9a9a9a;
-  --accent:       #2d4a3e;
-  --accent-light: rgba(45,74,62,0.08);
-  --accent-mid:   rgba(45,74,62,0.15);
-  --accent-glow:  rgba(45,74,62,0.04);
-  --border:       rgba(26,26,26,0.08);
-  --border-mid:   rgba(26,26,26,0.14);
-  --white:        #ffffff;
+/* ── RESET ─────────────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;font-size:16px}
 
-  --font-serif:   'Playfair Display', Georgia, serif;
-  --font-sans:    'DM Sans', system-ui, sans-serif;
-  --font-mono:    'DM Mono', monospace;
+/* ── TOKENS ────────────────────────────────────────── */
+:root{
+  --ink:       #0d0e10;
+  --s1:        #131517;
+  --s2:        #191c1f;
+  --s3:        #1f2327;
+  --r0:        rgba(220,215,205,0.06);
+  --r1:        rgba(220,215,205,0.10);
+  --r2:        rgba(220,215,205,0.18);
+  --chalk:     #ddd8ce;
+  --chalk-dim: #7a7872;
+  --gold:      #a08a5c;
+  --gold-dim:  rgba(160,138,92,0.15);
+  --gold-glow: rgba(160,138,92,0.08);
+  --green:     #2e4a38;
 
-  --ease:         cubic-bezier(0.22, 1, 0.36, 1);
-  --max-w:        1280px;
-  --pad:          56px;
-}
+  --serif:  'Cormorant', Georgia, serif;
+  --sans:   'DM Sans', system-ui, sans-serif;
+  --mono:   'DM Mono', monospace;
 
-/* ═══════════════════════════════════════════════
-   RESET
-   ═══════════════════════════════════════════════ */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; font-size: 16px; }
-body {
-  background: var(--bg);
-  color: var(--ink);
-  font-family: var(--font-sans);
-  font-weight: 300;
-  line-height: 1.65;
-  overflow-x: hidden;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  --ease: cubic-bezier(0.22,1,0.36,1);
 }
 
-/* Subtle paper texture overlay */
-body::after {
-  content: '';
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 9999;
-  opacity: 0.018;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+/* ── BASE ──────────────────────────────────────────── */
+body{
+  background:var(--ink);
+  color:var(--chalk);
+  font-family:var(--sans);
+  font-weight:300;
+  line-height:1.6;
+  overflow-x:hidden;
 }
 
-/* ═══════════════════════════════════════════════
-   NAVIGATION
-   ═══════════════════════════════════════════════ */
-.nav {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 200;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 24px var(--pad);
-  transition: background 0.4s var(--ease), box-shadow 0.4s var(--ease);
-}
-.nav.scrolled {
-  background: rgba(245,243,239,0.92);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  box-shadow: 0 1px 0 var(--border);
-}
-.nav-left { display: flex; flex-direction: column; gap: 2px; text-decoration: none; }
-.nav-logo-name {
-  font-family: var(--font-serif);
-  font-size: 18px;
-  font-weight: 400;
-  letter-spacing: 0.12em;
-  color: var(--ink);
-}
-.nav-logo-tag {
-  font-family: var(--font-mono);
-  font-size: 8px;
-  letter-spacing: 0.4em;
-  text-transform: uppercase;
-  color: var(--ink-muted);
-}
-.nav-links { display: flex; align-items: center; gap: 36px; }
-.nav-links a {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.28em;
-  text-transform: uppercase;
-  color: var(--ink-muted);
-  text-decoration: none;
-  transition: color 0.25s;
-}
-.nav-links a:hover { color: var(--ink); }
-.nav-contact-btn {
-  padding: 9px 22px;
-  border: 1px solid var(--border-mid);
-  color: var(--ink) !important;
-  transition: border-color 0.25s, background 0.25s !important;
-}
-.nav-contact-btn:hover {
-  border-color: var(--accent) !important;
-  background: var(--accent-light) !important;
+/* noise */
+body::after{
+  content:'';
+  position:fixed;inset:0;
+  pointer-events:none;z-index:9000;
+  opacity:.25;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
 }
 
-/* Mobile nav toggle */
-.nav-toggle {
-  display: none;
-  flex-direction: column;
-  gap: 5px;
-  cursor: pointer;
-  padding: 4px;
-  background: none;
-  border: none;
+/* ── NAV ───────────────────────────────────────────── */
+.nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;justify-content:space-between;align-items:center;
+  padding:28px 56px;
+  background:linear-gradient(to bottom,rgba(13,14,16,.96) 0%,transparent 100%);
 }
-.nav-toggle span {
-  display: block;
-  width: 22px;
-  height: 1.5px;
-  background: var(--ink);
-  transition: transform 0.3s var(--ease), opacity 0.3s;
+.nav-logo{display:flex;flex-direction:column;gap:3px;text-decoration:none}
+.nav-logo-name{
+  font-family:var(--serif);
+  font-size:17px;font-weight:500;
+  letter-spacing:.14em;color:var(--chalk);
+}
+.nav-logo-tag{
+  font-family:var(--mono);
+  font-size:8px;letter-spacing:.4em;
+  text-transform:uppercase;color:var(--chalk-dim);
+}
+.nav-links{display:flex;align-items:center;gap:40px}
+.nav-links a{
+  font-family:var(--mono);
+  font-size:10px;letter-spacing:.28em;
+  text-transform:uppercase;color:var(--chalk-dim);
+  text-decoration:none;transition:color .25s;
+}
+.nav-links a:hover{color:var(--chalk)}
+.nav-ig{
+  display:flex;align-items:center;
+  color:var(--chalk-dim);
+  transition:color .25s;
+}
+.nav-ig:hover{color:var(--chalk)}
+  padding:9px 24px;
+  border:1px solid var(--r1);
+  color:var(--chalk) !important;
+  transition:border-color .25s,background .25s !important;
+}
+.nav-contact:hover{border-color:var(--r2) !important;background:var(--r0) !important}
+
+/* ── HERO ──────────────────────────────────────────── */
+.hero{
+  min-height:100vh;
+  display:grid;
+  grid-template-rows:1fr auto;
+  position:relative;overflow:hidden;
+  padding:0 56px;
 }
 
-/* ═══════════════════════════════════════════════
-   HERO
-   ═══════════════════════════════════════════════ */
-.hero {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  position: relative;
-  padding: 0 var(--pad);
-  overflow: hidden;
+/* canvas bg */
+#heroCanvas{position:absolute;inset:0;width:100%;height:100%}
+
+/* gradient cover */
+.hero-veil{
+  position:absolute;inset:0;
+  background:
+    linear-gradient(to right, rgba(13,14,16,.7) 0%, transparent 60%),
+    linear-gradient(to top, rgba(13,14,16,1) 0%, rgba(13,14,16,.2) 35%, transparent 65%);
+  pointer-events:none;
 }
 
-/* Hero topographic background */
-.hero-bg {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  opacity: 0.12;
-}
-.hero-bg svg {
-  width: 100%;
-  height: 100%;
+.hero-body{
+  position:relative;z-index:2;
+  display:flex;flex-direction:column;
+  justify-content:flex-end;
+  padding-bottom:96px;
+  padding-top:160px;
 }
 
-/* Subtle grid overlay */
-.hero-grid {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  background-image:
-    linear-gradient(rgba(26,26,26,0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(26,26,26,0.03) 1px, transparent 1px);
-  background-size: 80px 80px;
+/* geo tag */
+.hero-geo{
+  font-family:var(--mono);
+  font-size:10px;letter-spacing:.3em;
+  color:var(--chalk-dim);
+  margin-bottom:36px;
+  display:flex;align-items:center;gap:16px;
+  opacity:0;animation:rise .8s var(--ease) .2s forwards;
+}
+.geo-dot{
+  width:6px;height:6px;border-radius:50%;
+  background:var(--gold);
+  box-shadow:0 0 8px var(--gold);
 }
 
-.hero-content {
-  position: relative;
-  z-index: 2;
-  padding-bottom: 100px;
+/* headline */
+.hero-headline{
+  font-family:var(--serif);
+  font-size:clamp(60px,9vw,128px);
+  font-weight:300;
+  line-height:.92;
+  letter-spacing:.01em;
+  color:var(--chalk);
+  margin-bottom:8px;
+  opacity:0;animation:rise 1s var(--ease) .4s forwards;
+}
+.hero-headline-sub{
+  font-family:var(--serif);
+  font-size:clamp(32px,5vw,68px);
+  font-weight:300;
+  font-style:italic;
+  color:var(--chalk-dim);
+  margin-bottom:40px;
+  line-height:1;
+  letter-spacing:.04em;
+  opacity:0;animation:rise 1s var(--ease) .55s forwards;
 }
 
-/* Location tag */
-.hero-geo {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 32px;
-  opacity: 0;
-  animation: rise 0.8s var(--ease) 0.3s forwards;
+/* rotating phrase */
+.hero-phrase{
+  font-family:var(--mono);
+  font-size:11px;letter-spacing:.3em;
+  text-transform:uppercase;color:var(--gold);
+  display:flex;align-items:center;gap:14px;
+  opacity:0;animation:rise .8s var(--ease) .75s forwards;
+  margin-bottom:52px;
 }
-.hero-geo-flag {
-  width: 18px;
-  height: 13px;
-  border-radius: 1px;
-  overflow: hidden;
-  position: relative;
+.hero-phrase::before{content:'';width:32px;height:1px;background:var(--gold);opacity:.5}
+.word-cycle{
+  display:inline-block;
+  overflow:hidden;height:1.2em;vertical-align:middle;
 }
-.hero-geo-flag svg { width: 100%; height: 100%; }
-.hero-geo-text {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.3em;
-  color: var(--ink-muted);
-}
-.hero-geo-coords {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.15em;
-  color: var(--ink-faint);
-}
-.geo-sep { color: var(--ink-faint); opacity: 0.4; }
-
-/* Main headline */
-.hero-headline {
-  font-family: var(--font-serif);
-  font-size: clamp(52px, 8vw, 110px);
-  font-weight: 300;
-  line-height: 1;
-  letter-spacing: -0.01em;
-  color: var(--ink);
-  margin-bottom: 6px;
-  opacity: 0;
-  animation: rise 1s var(--ease) 0.5s forwards;
-}
-.hero-headline .italic-word {
-  display: inline-block;
-  font-style: italic;
-  background: var(--accent);
-  color: var(--white);
-  padding: 0 12px;
-  line-height: 1.1;
+.word-cycle span{
+  display:block;
+  animation:cycle 6s infinite;
 }
 
-/* Tagline */
-.hero-tagline {
-  font-family: var(--font-serif);
-  font-size: clamp(16px, 2vw, 20px);
-  font-style: italic;
-  color: var(--ink-muted);
-  line-height: 1.7;
-  max-width: 440px;
-  margin-bottom: 40px;
-  opacity: 0;
-  animation: rise 1s var(--ease) 0.7s forwards;
+/* CTA row */
+.hero-ctas{
+  display:flex;align-items:center;gap:24px;
+  opacity:0;animation:rise .8s var(--ease) .9s forwards;
+}
+.btn-cc{
+  padding:13px 36px;
+  background:var(--gold);
+  color:var(--ink);
+  font-family:var(--mono);
+  font-size:10px;font-weight:400;
+  letter-spacing:.28em;text-transform:uppercase;
+  text-decoration:none;
+  transition:filter .25s,transform .2s;
+}
+.btn-cc:hover{filter:brightness(1.1);transform:translateY(-1px)}
+.btn-ghost{
+  padding:12px 36px;
+  border:1px solid var(--r1);
+  color:var(--chalk-dim);
+  font-family:var(--mono);
+  font-size:10px;
+  letter-spacing:.28em;text-transform:uppercase;
+  text-decoration:none;
+  transition:border-color .25s,color .25s;
+}
+.btn-ghost:hover{border-color:var(--r2);color:var(--chalk)}
+
+/* ── CLOCKS ────────────────────────────────────────── */
+.hero-footer-bar{
+  position:relative;z-index:2;
+  display:flex;justify-content:space-between;align-items:flex-end;
+  padding-bottom:40px;
+  border-top:1px solid var(--r0);
+  padding-top:24px;
+}
+.clocks{display:flex;gap:48px}
+.clock-item{display:flex;flex-direction:column;gap:4px}
+.clock-city{
+  font-family:var(--mono);
+  font-size:9px;letter-spacing:.35em;
+  text-transform:uppercase;color:var(--chalk-dim);
+}
+.clock-time{
+  font-family:var(--mono);
+  font-size:18px;font-weight:300;
+  color:var(--chalk);letter-spacing:.08em;
+}
+.clock-tz{
+  font-family:var(--mono);
+  font-size:8px;letter-spacing:.2em;
+  color:var(--chalk-dim);opacity:.5;
+}
+.hero-scroll{
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+}
+.scroll-txt{font-family:var(--mono);font-size:8px;letter-spacing:.35em;text-transform:uppercase;color:var(--chalk-dim);opacity:.5}
+.scroll-bar{width:1px;height:48px;background:linear-gradient(to bottom,var(--gold),transparent);animation:pulse 2.2s ease infinite}
+
+/* ── SECTION UTIL ──────────────────────────────────── */
+.wrap{max-width:1180px;margin:0 auto;padding:0 56px}
+.rule{height:1px;background:linear-gradient(to right,transparent,var(--r1) 20%,var(--r1) 80%,transparent);margin:0 56px}
+.lbl{font-family:var(--mono);font-size:9px;letter-spacing:.38em;text-transform:uppercase;color:var(--chalk-dim)}
+.lbl-gold{font-family:var(--mono);font-size:9px;letter-spacing:.38em;text-transform:uppercase;color:var(--gold)}
+
+/* ── ABOUT ─────────────────────────────────────────── */
+.about{padding:140px 0;background:var(--s1)}
+.about-grid{
+  display:grid;
+  grid-template-columns:1fr 1.6fr;
+  gap:120px;align-items:start;
+}
+.about-left{position:sticky;top:140px}
+.about-kicker{margin-bottom:20px}
+.about-title{
+  font-family:var(--serif);
+  font-size:clamp(44px,5vw,72px);
+  font-weight:300;line-height:.95;
+  color:var(--chalk);margin-top:16px;
+}
+.about-title em{
+  display:block;font-style:italic;
+  font-size:.6em;color:var(--chalk-dim);
+  line-height:2;letter-spacing:.04em;
+}
+.about-sig{
+  font-family:var(--serif);
+  font-style:italic;font-size:14px;
+  color:var(--gold);margin-top:20px;
+  letter-spacing:.04em;
+}
+.about-right{display:flex;flex-direction:column;gap:32px}
+.about-p{
+  font-family:var(--serif);
+  font-size:clamp(17px,1.6vw,21px);
+  font-weight:300;
+  font-style:italic;
+  color:rgba(221,216,206,.55);
+  line-height:1.85;
+}
+.about-p b{
+  font-style:normal;font-weight:400;
+  color:var(--chalk);
+  font-family:var(--sans);
+  font-size:.82em;letter-spacing:.04em;
+}
+.about-rule{width:36px;height:1px;background:var(--gold);opacity:.35}
+
+/* ── PILLARS ───────────────────────────────────────── */
+.pillars{padding:140px 0;background:var(--ink)}
+.pillars-top{
+  display:flex;justify-content:space-between;align-items:flex-end;
+  margin-bottom:80px;
+}
+.pillars-headline{
+  font-family:var(--serif);
+  font-size:clamp(38px,4.5vw,60px);
+  font-weight:300;
+  color:var(--chalk);
+  margin-top:16px;line-height:1;
+}
+.pillars-sub{
+  font-family:var(--serif);
+  font-size:16px;font-style:italic;
+  color:var(--chalk-dim);max-width:320px;text-align:right;
+  line-height:1.7;
 }
 
-/* Rotating phrase */
-.hero-phrase {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  color: var(--accent);
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  margin-bottom: 48px;
-  opacity: 0;
-  animation: rise 0.8s var(--ease) 0.85s forwards;
+/* accordion pillars */
+.pillar-list{border-top:1px solid var(--r0)}
+.pillar{
+  border-bottom:1px solid var(--r0);
+  overflow:hidden;
 }
-.hero-phrase::before {
-  content: '';
-  width: 36px;
-  height: 1px;
-  background: var(--accent);
-  opacity: 0.4;
+.pillar-head{
+  display:grid;
+  grid-template-columns:72px 1fr 36px;
+  align-items:center;
+  padding:36px 0;
+  cursor:pointer;
+  gap:24px;
+  transition:opacity .2s;
+  user-select:none;
 }
-.word-cycle {
-  display: inline-block;
-  overflow: hidden;
-  height: 1.2em;
-  vertical-align: middle;
+.pillar-head:hover .pillar-name{color:var(--chalk)}
+.pillar-index{
+  font-family:var(--mono);
+  font-size:11px;letter-spacing:.2em;
+  color:var(--chalk-dim);
 }
-.word-cycle span {
-  display: block;
-  animation: cycle 7s infinite;
+.pillar-name{
+  font-family:var(--serif);
+  font-size:clamp(22px,2.5vw,32px);
+  font-weight:300;color:rgba(221,216,206,.7);
+  transition:color .3s;letter-spacing:.02em;
 }
-
-/* CTA buttons */
-.hero-ctas {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  opacity: 0;
-  animation: rise 0.8s var(--ease) 1s forwards;
+.pillar-toggle{
+  width:28px;height:28px;
+  border:1px solid var(--r1);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--mono);font-size:16px;
+  color:var(--chalk-dim);
+  transition:border-color .3s,color .3s,transform .4s var(--ease);
+  flex-shrink:0;
 }
-.btn-primary {
-  display: inline-block;
-  padding: 14px 36px;
-  background: var(--ink);
-  color: var(--bg);
-  font-family: var(--font-mono);
-  font-size: 10px;
-  font-weight: 400;
-  letter-spacing: 0.28em;
-  text-transform: uppercase;
-  text-decoration: none;
-  transition: background 0.3s, transform 0.2s;
+.pillar.open .pillar-toggle{
+  transform:rotate(45deg);
+  border-color:var(--gold);color:var(--gold);
 }
-.btn-primary:hover {
-  background: var(--accent);
-  transform: translateY(-1px);
+.pillar-body{
+  display:grid;grid-template-rows:0fr;
+  transition:grid-template-rows .5s var(--ease);
 }
-.btn-secondary {
-  display: inline-block;
-  padding: 13px 36px;
-  border: 1px solid var(--border-mid);
-  color: var(--ink-muted);
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.28em;
-  text-transform: uppercase;
-  text-decoration: none;
-  transition: border-color 0.25s, color 0.25s;
+.pillar.open .pillar-body{grid-template-rows:1fr}
+.pillar-body-inner{
+  overflow:hidden;
+  padding-left:96px;
+  padding-bottom:0;
+  transition:padding-bottom .5s var(--ease);
 }
-.btn-secondary:hover {
-  border-color: var(--ink);
-  color: var(--ink);
+.pillar.open .pillar-body-inner{padding-bottom:48px}
+.pillar-desc{
+  font-family:var(--serif);
+  font-size:clamp(16px,1.6vw,19px);
+  font-style:italic;
+  color:rgba(221,216,206,.5);
+  line-height:1.85;max-width:640px;
 }
-
-/* World clocks bar */
-.hero-bottom {
-  position: relative;
-  z-index: 2;
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  padding-bottom: 36px;
-  border-top: 1px solid var(--border);
-  padding-top: 28px;
+.pillar-tags{
+  display:flex;flex-wrap:wrap;gap:8px;
+  margin-top:24px;
 }
-.clocks { display: flex; gap: 56px; }
-.clock-item { display: flex; flex-direction: column; gap: 5px; }
-.clock-city {
-  font-family: var(--font-mono);
-  font-size: 9px;
-  letter-spacing: 0.35em;
-  text-transform: uppercase;
-  color: var(--ink-faint);
-}
-.clock-time {
-  font-family: var(--font-mono);
-  font-size: 20px;
-  font-weight: 300;
-  color: var(--ink);
-  letter-spacing: 0.1em;
-}
-.clock-tz {
-  font-family: var(--font-mono);
-  font-size: 8px;
-  letter-spacing: 0.2em;
-  color: var(--ink-faint);
-  opacity: 0.5;
+.pillar-tag{
+  font-family:var(--mono);
+  font-size:9px;letter-spacing:.25em;
+  text-transform:uppercase;
+  color:var(--gold);
+  border:1px solid rgba(160,138,92,.2);
+  padding:5px 12px;
 }
 
-/* Scroll indicator */
-.scroll-indicator {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
+/* ── MARKETS ───────────────────────────────────────── */
+.markets{padding:140px 0;background:var(--s1)}
+.markets-top{margin-bottom:72px}
+.markets-headline{
+  font-family:var(--serif);
+  font-size:clamp(38px,4.5vw,60px);
+  font-weight:300;color:var(--chalk);
+  margin-top:16px;line-height:1;
 }
-.scroll-line {
-  width: 1px;
-  height: 44px;
-  background: linear-gradient(to bottom, var(--accent), transparent);
-  animation: scrollPulse 2.2s ease infinite;
+.mkt-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:1px;
+  background:var(--r0);
 }
-.scroll-text {
-  font-family: var(--font-mono);
-  font-size: 8px;
-  letter-spacing: 0.35em;
-  text-transform: uppercase;
-  color: var(--ink-faint);
-  opacity: 0.5;
+.mkt-card{
+  background:var(--s1);
+  padding:52px 44px;
+  position:relative;overflow:hidden;
+  transition:background .35s;
 }
-
-/* ═══════════════════════════════════════════════
-   SECTION UTILITIES
-   ═══════════════════════════════════════════════ */
-.section-wrap { max-width: var(--max-w); margin: 0 auto; padding: 0 var(--pad); }
-.section-rule {
-  height: 1px;
-  background: linear-gradient(to right, transparent, var(--border-mid) 20%, var(--border-mid) 80%, transparent);
-  max-width: var(--max-w);
-  margin: 0 auto;
+.mkt-card:hover{background:var(--s2)}
+.mkt-card::before{
+  content:'';
+  position:absolute;top:0;left:0;right:0;
+  height:1px;
+  background:linear-gradient(to right,transparent,var(--gold) 50%,transparent);
+  opacity:0;transition:opacity .4s;
 }
-.label {
-  font-family: var(--font-mono);
-  font-size: 9px;
-  letter-spacing: 0.38em;
-  text-transform: uppercase;
-  color: var(--ink-faint);
+.mkt-card:hover::before{opacity:.4}
+.mkt-ticker{
+  font-family:var(--mono);
+  font-size:10px;letter-spacing:.3em;
+  color:var(--gold);margin-bottom:20px;
+  display:block;
 }
-.label-accent {
-  font-family: var(--font-mono);
-  font-size: 9px;
-  letter-spacing: 0.38em;
-  text-transform: uppercase;
-  color: var(--accent);
+.mkt-name{
+  font-family:var(--serif);
+  font-size:26px;font-weight:300;
+  color:var(--chalk);line-height:1.1;
+  margin-bottom:16px;
 }
-
-/* ═══════════════════════════════════════════════
-   ABOUT SECTION
-   ═══════════════════════════════════════════════ */
-.about { padding: 160px 0; }
-.about-grid {
-  display: grid;
-  grid-template-columns: 1fr 1.5fr;
-  gap: 100px;
-  align-items: start;
+.mkt-desc{
+  font-family:var(--serif);
+  font-size:15px;font-style:italic;
+  color:rgba(221,216,206,.4);
+  line-height:1.75;
 }
-.about-left { position: sticky; top: 120px; }
-.about-kicker { margin-bottom: 20px; }
-.about-title {
-  font-family: var(--font-serif);
-  font-size: clamp(40px, 5vw, 68px);
-  font-weight: 300;
-  line-height: 1;
-  color: var(--ink);
-  margin-top: 16px;
+.mkt-session{
+  font-family:var(--mono);
+  font-size:8px;letter-spacing:.25em;
+  text-transform:uppercase;
+  color:var(--chalk-dim);
+  margin-top:28px;
+  display:flex;align-items:center;gap:8px;
 }
-.about-title em {
-  display: block;
-  font-style: italic;
-  font-size: 0.58em;
-  color: var(--ink-muted);
-  line-height: 1.9;
-  letter-spacing: 0.03em;
-}
-.about-sig {
-  font-family: var(--font-serif);
-  font-style: italic;
-  font-size: 14px;
-  color: var(--accent);
-  margin-top: 20px;
-  letter-spacing: 0.04em;
-}
-.about-right { display: flex; flex-direction: column; gap: 28px; }
-.about-p {
-  font-family: var(--font-serif);
-  font-size: clamp(17px, 1.5vw, 20px);
-  font-weight: 300;
-  font-style: italic;
-  color: var(--ink-muted);
-  line-height: 1.85;
-}
-.about-p strong {
-  font-style: normal;
-  font-weight: 500;
-  color: var(--ink);
-  font-family: var(--font-sans);
-  font-size: 0.85em;
-  letter-spacing: 0.02em;
-}
-.about-rule { width: 36px; height: 1px; background: var(--accent); opacity: 0.35; }
-
-/* ═══════════════════════════════════════════════
-   PILLARS SECTION
-   ═══════════════════════════════════════════════ */
-.pillars { padding: 160px 0; background: var(--bg-alt); }
-.pillars-top {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  margin-bottom: 72px;
-}
-.pillars-headline {
-  font-family: var(--font-serif);
-  font-size: clamp(36px, 4.5vw, 56px);
-  font-weight: 300;
-  color: var(--ink);
-  margin-top: 16px;
-  line-height: 1;
-}
-.pillars-sub {
-  font-family: var(--font-serif);
-  font-size: 16px;
-  font-style: italic;
-  color: var(--ink-muted);
-  max-width: 320px;
-  text-align: right;
-  line-height: 1.7;
+.session-dot{
+  width:5px;height:5px;border-radius:50%;
+  background:var(--gold);
+  animation:blink 2s ease infinite;
 }
 
-/* Pillar card grid layout - inspired by Gauss */
-.pillar-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1px;
-  background: var(--border);
+/* ── PHILOSOPHY ────────────────────────────────────── */
+.philosophy{
+  padding:180px 0;
+  background:var(--ink);
+  text-align:center;
+  position:relative;overflow:hidden;
 }
-.pillar-card {
-  background: var(--bg-alt);
-  padding: 48px 40px;
-  position: relative;
-  transition: background 0.4s var(--ease);
-  cursor: pointer;
+.philosophy::before{
+  content:'';
+  position:absolute;top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  width:600px;height:600px;border-radius:50%;
+  background:radial-gradient(ellipse,rgba(160,138,92,.05) 0%,transparent 70%);
+  pointer-events:none;
 }
-.pillar-card:hover { background: var(--bg); }
-.pillar-card::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: var(--accent);
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 0.5s var(--ease);
+.phil-rule{
+  width:1px;height:72px;
+  background:linear-gradient(to bottom,transparent,var(--gold),transparent);
+  margin:0 auto 48px;
 }
-.pillar-card:hover::after { transform: scaleX(1); }
-.pillar-card-icon {
-  width: 48px;
-  height: 48px;
-  border: 1px solid var(--border-mid);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 24px;
-  font-family: var(--font-serif);
-  font-size: 18px;
-  color: var(--accent);
-  transition: border-color 0.3s;
+.phil-open{
+  font-family:var(--serif);
+  font-size:80px;font-weight:300;
+  color:rgba(160,138,92,.12);
+  line-height:.4;display:block;
+  margin-bottom:40px;
 }
-.pillar-card:hover .pillar-card-icon { border-color: var(--accent); }
-.pillar-card-num {
-  font-family: var(--font-mono);
-  font-size: 9px;
-  letter-spacing: 0.3em;
-  color: var(--ink-faint);
-  margin-bottom: 12px;
-  text-transform: uppercase;
+.phil-quote{
+  font-family:var(--serif);
+  font-size:clamp(26px,3.5vw,48px);
+  font-weight:300;font-style:italic;
+  color:var(--chalk);
+  line-height:1.4;
+  max-width:860px;margin:0 auto 36px;
 }
-.pillar-card-title {
-  font-family: var(--font-serif);
-  font-size: clamp(22px, 2.2vw, 28px);
-  font-weight: 400;
-  color: var(--ink);
-  margin-bottom: 16px;
-  line-height: 1.2;
-}
-.pillar-card-desc {
-  font-family: var(--font-sans);
-  font-size: 14px;
-  font-weight: 300;
-  color: var(--ink-muted);
-  line-height: 1.75;
-}
-.pillar-card-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 20px;
-}
-.pillar-card-tag {
-  font-family: var(--font-mono);
-  font-size: 8px;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: var(--accent);
-  border: 1px solid rgba(45,74,62,0.2);
-  padding: 4px 10px;
+.phil-quote em{color:var(--gold);font-style:italic}
+.phil-attr{
+  font-family:var(--mono);
+  font-size:10px;letter-spacing:.35em;
+  text-transform:uppercase;color:var(--chalk-dim);
 }
 
-/* ═══════════════════════════════════════════════
-   MARKETS SECTION
-   ═══════════════════════════════════════════════ */
-.markets { padding: 160px 0; }
-.markets-top { margin-bottom: 64px; }
-.markets-headline {
-  font-family: var(--font-serif);
-  font-size: clamp(36px, 4.5vw, 56px);
-  font-weight: 300;
-  color: var(--ink);
-  margin-top: 16px;
-  line-height: 1;
+/* ── CONTACT ───────────────────────────────────────── */
+.contact{padding:140px 0;background:var(--s1)}
+.contact-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:120px;align-items:start;
 }
-.mkt-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1px;
-  background: var(--border);
+.contact-title{
+  font-family:var(--serif);
+  font-size:clamp(38px,4.5vw,60px);
+  font-weight:300;color:var(--chalk);
+  margin-top:16px;line-height:.95;
 }
-.mkt-card {
-  background: var(--bg);
-  padding: 48px 40px;
-  position: relative;
-  overflow: hidden;
-  transition: background 0.35s var(--ease);
+.contact-title em{
+  display:block;font-style:italic;
+  font-size:.55em;color:var(--chalk-dim);
+  line-height:2;letter-spacing:.06em;
 }
-.mkt-card:hover { background: var(--bg-alt); }
-.mkt-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: linear-gradient(to right, transparent, var(--accent) 50%, transparent);
-  opacity: 0;
-  transition: opacity 0.4s;
+.contact-body{
+  font-family:var(--serif);
+  font-size:17px;font-style:italic;
+  color:rgba(221,216,206,.45);
+  line-height:1.8;margin-top:28px;margin-bottom:52px;
 }
-.mkt-card:hover::before { opacity: 0.6; }
-.mkt-ticker {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.3em;
-  color: var(--accent);
-  margin-bottom: 18px;
-  display: block;
+.contact-details{display:flex;flex-direction:column;gap:24px}
+.c-item{display:flex;align-items:flex-start;gap:20px}
+.c-icon{
+  width:36px;height:36px;
+  border:1px solid var(--r1);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;margin-top:2px;
 }
-.mkt-name {
-  font-family: var(--font-serif);
-  font-size: 24px;
-  font-weight: 400;
-  color: var(--ink);
-  line-height: 1.15;
-  margin-bottom: 14px;
+.c-icon svg{width:14px;height:14px;stroke:var(--gold);fill:none;stroke-width:1.5}
+.c-lbl{font-family:var(--mono);font-size:8px;letter-spacing:.3em;text-transform:uppercase;color:var(--chalk-dim);margin-bottom:3px}
+.c-val{font-family:var(--serif);font-size:16px;font-style:italic;color:var(--chalk)}
+
+/* form */
+.form-wrap{
+  background:var(--s2);
+  border:1px solid var(--r0);
+  padding:52px;
+  position:relative;
 }
-.mkt-desc {
-  font-family: var(--font-sans);
-  font-size: 14px;
-  font-weight: 300;
-  color: var(--ink-muted);
-  line-height: 1.7;
+.form-wrap::before{
+  content:'';position:absolute;top:-1px;left:48px;right:48px;
+  height:1px;
+  background:linear-gradient(to right,transparent,var(--gold) 50%,transparent);
+  opacity:.3;
 }
-.mkt-session {
-  font-family: var(--font-mono);
-  font-size: 8px;
-  letter-spacing: 0.25em;
-  text-transform: uppercase;
-  color: var(--ink-faint);
-  margin-top: 24px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
+.form-title{
+  font-family:var(--serif);
+  font-size:22px;font-weight:300;
+  color:var(--chalk);margin-bottom:6px;
 }
-.session-dot {
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: var(--accent);
-  animation: pulse 2.5s ease infinite;
+.form-sub{font-family:var(--mono);font-size:9px;letter-spacing:.2em;color:var(--chalk-dim);margin-bottom:36px}
+.f-field{margin-bottom:18px}
+.f-label{
+  display:block;
+  font-family:var(--mono);font-size:8px;
+  letter-spacing:.3em;text-transform:uppercase;
+  color:var(--chalk-dim);margin-bottom:8px;
+}
+.f-input,.f-ta{
+  width:100%;background:var(--s3);
+  border:1px solid var(--r0);
+  padding:13px 16px;
+  color:var(--chalk);
+  font-family:var(--sans);font-size:13px;font-weight:300;
+  outline:none;
+  transition:border-color .25s;
+  -webkit-appearance:none;border-radius:0;
+}
+.f-input:focus,.f-ta:focus{border-color:rgba(160,138,92,.4)}
+.f-ta{resize:none;height:96px}
+.f-submit{
+  width:100%;padding:15px;margin-top:8px;
+  background:var(--gold);border:none;
+  color:var(--ink);
+  font-family:var(--mono);font-size:10px;
+  font-weight:400;letter-spacing:.3em;
+  text-transform:uppercase;cursor:pointer;
+  transition:filter .25s;
+}
+.f-submit:hover{filter:brightness(1.1)}
+.form-success{
+  display:none;
+  text-align:center;padding:40px 20px;
+}
+.form-success.visible{display:block}
+.form-success-title{
+  font-family:var(--serif);font-size:22px;
+  color:var(--chalk);margin-bottom:12px;
+}
+.form-success-body{
+  font-family:var(--serif);font-style:italic;
+  font-size:15px;color:var(--chalk-dim);
+  line-height:1.7;
 }
 
-/* ═══════════════════════════════════════════════
-   PHILOSOPHY / QUOTE SECTION
-   ═══════════════════════════════════════════════ */
-.philosophy {
-  padding: 180px 0;
-  background: var(--bg-alt);
-  text-align: center;
-  position: relative;
-  overflow: hidden;
+/* ── FOOTER ────────────────────────────────────────── */
+footer{
+  background:var(--ink);
+  position:relative;overflow:hidden;
 }
-.philosophy::before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 500px;
-  height: 500px;
-  border-radius: 50%;
-  background: radial-gradient(ellipse, var(--accent-glow) 0%, transparent 70%);
-  pointer-events: none;
+.footer-topo{
+  position:absolute;bottom:0;left:0;right:0;
+  height:220px;opacity:.06;
+  pointer-events:none;
 }
-.phil-rule {
-  width: 1px;
-  height: 64px;
-  background: linear-gradient(to bottom, transparent, var(--accent), transparent);
-  margin: 0 auto 48px;
+.footer-main{
+  display:grid;
+  grid-template-columns:1.8fr 1fr 1fr;
+  gap:80px;
+  padding:72px 56px 56px;
+  position:relative;z-index:1;
+  border-top:1px solid var(--r0);
 }
-.phil-open {
-  font-family: var(--font-serif);
-  font-size: 72px;
-  font-weight: 300;
-  color: var(--border-mid);
-  line-height: 0.4;
-  display: block;
-  margin-bottom: 36px;
+.footer-brand-name{
+  font-family:var(--serif);
+  font-size:20px;font-weight:400;
+  letter-spacing:.1em;color:var(--chalk);
+  margin-bottom:4px;
 }
-.phil-quote {
-  font-family: var(--font-serif);
-  font-size: clamp(24px, 3vw, 44px);
-  font-weight: 300;
-  font-style: italic;
-  color: var(--ink);
-  line-height: 1.45;
-  max-width: 800px;
-  margin: 0 auto 32px;
+.footer-brand-sub{
+  font-family:var(--mono);
+  font-size:8px;letter-spacing:.35em;
+  text-transform:uppercase;color:var(--chalk-dim);
+  margin-bottom:20px;
 }
-.phil-quote em { color: var(--accent); }
-.phil-attr {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.35em;
-  text-transform: uppercase;
-  color: var(--ink-faint);
+.footer-brand-copy{
+  font-family:var(--serif);
+  font-size:13px;font-style:italic;
+  color:rgba(221,216,206,.3);
+  line-height:1.8;max-width:260px;
 }
-
-/* Value icons row */
-.value-row {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 48px;
-  margin-top: 80px;
-  max-width: 800px;
-  margin-left: auto;
-  margin-right: auto;
-  padding: 0 var(--pad);
+.footer-col-title{
+  font-family:var(--mono);font-size:9px;
+  letter-spacing:.32em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:24px;
 }
-.value-item {
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 16px;
+.footer-links{display:flex;flex-direction:column;gap:12px}
+.footer-links a{
+  font-family:var(--sans);font-size:13px;font-weight:300;
+  color:rgba(221,216,206,.35);
+  text-decoration:none;letter-spacing:.04em;
+  transition:color .25s;
 }
-.value-icon {
-  width: 48px;
-  height: 48px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.footer-links a:hover{color:var(--chalk)}
+.footer-bottom{
+  display:flex;justify-content:space-between;align-items:flex-start;
+  padding:32px 56px 48px;
+  border-top:1px solid var(--r0);
+  gap:40px;
+  position:relative;z-index:1;
 }
-.value-icon svg { width: 36px; height: 36px; stroke: var(--accent); fill: none; stroke-width: 0.8; }
-.value-title {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.25em;
-  text-transform: uppercase;
-  color: var(--ink);
-}
-.value-desc {
-  font-family: var(--font-sans);
-  font-size: 13px;
-  font-weight: 300;
-  color: var(--ink-muted);
-  line-height: 1.7;
-  max-width: 200px;
+.footer-copy{font-family:var(--mono);font-size:9px;letter-spacing:.15em;color:rgba(221,216,206,.2)}
+.footer-disclaimer{
+  font-family:var(--mono);font-size:9px;letter-spacing:.06em;
+  color:rgba(221,216,206,.15);
+  max-width:540px;line-height:1.8;text-align:right;
 }
 
-/* ═══════════════════════════════════════════════
-   CONTACT SECTION
-   ═══════════════════════════════════════════════ */
-.contact { padding: 160px 0; }
-.contact-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 100px;
-  align-items: start;
-}
-.contact-kicker { margin-bottom: 20px; }
-.contact-title {
-  font-family: var(--font-serif);
-  font-size: clamp(36px, 4.5vw, 56px);
-  font-weight: 300;
-  color: var(--ink);
-  margin-top: 16px;
-  line-height: 0.95;
-}
-.contact-title em {
-  display: block;
-  font-style: italic;
-  font-size: 0.55em;
-  color: var(--ink-muted);
-  line-height: 2;
-  letter-spacing: 0.06em;
-}
-.contact-body {
-  font-family: var(--font-serif);
-  font-size: 17px;
-  font-style: italic;
-  color: var(--ink-muted);
-  line-height: 1.8;
-  margin-top: 28px;
-  margin-bottom: 48px;
-}
-.contact-details { display: flex; flex-direction: column; gap: 28px; }
-.c-item { display: flex; align-items: flex-start; gap: 20px; }
-.c-icon {
-  width: 40px;
-  height: 40px;
-  border: 1px solid var(--border-mid);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  margin-top: 2px;
-}
-.c-icon svg { width: 16px; height: 16px; stroke: var(--accent); fill: none; stroke-width: 1.5; }
-.c-lbl {
-  font-family: var(--font-mono);
-  font-size: 8px;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  color: var(--ink-faint);
-  margin-bottom: 3px;
-}
-.c-val {
-  font-family: var(--font-sans);
-  font-size: 15px;
-  font-weight: 300;
-  color: var(--ink);
+/* ── REVEAL ────────────────────────────────────────── */
+.rv{opacity:0;transform:translateY(24px);transition:opacity .9s var(--ease),transform .9s var(--ease)}
+.rv.in{opacity:1;transform:none}
+.d1{transition-delay:.1s}.d2{transition-delay:.2s}.d3{transition-delay:.3s}.d4{transition-delay:.45s}
+
+/* ── ANIMATIONS ────────────────────────────────────── */
+@keyframes rise{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:none}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+@keyframes cycle{
+  0%,30%{transform:translateY(0)}
+  33%,63%{transform:translateY(-100%)}
+  66%,96%{transform:translateY(-200%)}
+  100%{transform:translateY(-300%)}
 }
 
-/* Form */
-.form-wrap {
-  background: var(--bg-alt);
-  border: 1px solid var(--border);
-  padding: 52px;
-  position: relative;
+/* ── MOBILE ────────────────────────────────────────── */
+@media(max-width:1024px){
+  .nav{padding:22px 32px}
+  .wrap{padding:0 32px}
+  .rule{margin:0 32px}
+  .hero{padding:0 32px}
+  .about-grid{grid-template-columns:1fr;gap:52px}
+  .about-left{position:static}
+  .mkt-grid{grid-template-columns:1fr 1fr}
+  .contact-grid{grid-template-columns:1fr;gap:56px}
+  .footer-main{grid-template-columns:1fr;gap:40px;padding:52px 32px 40px}
+  .footer-bottom{padding:28px 32px 40px;flex-direction:column}
+  .footer-disclaimer{text-align:left}
 }
-.form-wrap::before {
-  content: '';
-  position: absolute;
-  top: -1px;
-  left: 48px;
-  right: 48px;
-  height: 2px;
-  background: var(--accent);
-  opacity: 0.4;
-}
-.form-title {
-  font-family: var(--font-serif);
-  font-size: 22px;
-  font-weight: 400;
-  color: var(--ink);
-  margin-bottom: 6px;
-}
-.form-sub {
-  font-family: var(--font-mono);
-  font-size: 9px;
-  letter-spacing: 0.2em;
-  color: var(--ink-faint);
-  margin-bottom: 36px;
-}
-.f-field { margin-bottom: 20px; }
-.f-label {
-  display: block;
-  font-family: var(--font-mono);
-  font-size: 8px;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  color: var(--ink-faint);
-  margin-bottom: 8px;
-}
-.f-input, .f-ta {
-  width: 100%;
-  background: var(--bg);
-  border: 1px solid var(--border);
-  padding: 14px 16px;
-  color: var(--ink);
-  font-family: var(--font-sans);
-  font-size: 14px;
-  font-weight: 300;
-  outline: none;
-  transition: border-color 0.25s;
-  -webkit-appearance: none;
-  border-radius: 0;
-}
-.f-input:focus, .f-ta:focus { border-color: var(--accent); }
-.f-input::placeholder, .f-ta::placeholder { color: var(--ink-faint); }
-.f-ta { resize: none; height: 100px; }
-.f-submit {
-  width: 100%;
-  padding: 16px;
-  margin-top: 8px;
-  background: var(--ink);
-  border: none;
-  color: var(--bg);
-  font-family: var(--font-mono);
-  font-size: 10px;
-  font-weight: 400;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: background 0.3s, transform 0.2s;
-}
-.f-submit:hover {
-  background: var(--accent);
-  transform: translateY(-1px);
-}
-.form-success { display: none; text-align: center; padding: 40px 20px; }
-.form-success.visible { display: block; }
-.form-success-title {
-  font-family: var(--font-serif);
-  font-size: 22px;
-  color: var(--ink);
-  margin-bottom: 12px;
-}
-.form-success-body {
-  font-family: var(--font-serif);
-  font-style: italic;
-  font-size: 15px;
-  color: var(--ink-muted);
-  line-height: 1.7;
-}
-
-/* ═══════════════════════════════════════════════
-   FOOTER
-   ═══════════════════════════════════════════════ */
-footer {
-  background: var(--ink);
-  color: rgba(221,216,206,0.8);
-  position: relative;
-  overflow: hidden;
-}
-.footer-topo {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 200px;
-  opacity: 0.15;
-  pointer-events: none;
-}
-.footer-main {
-  display: grid;
-  grid-template-columns: 1.6fr 1fr 1fr;
-  gap: 80px;
-  padding: 72px var(--pad) 56px;
-  position: relative;
-  z-index: 1;
-  border-top: 1px solid rgba(255,255,255,0.06);
-}
-.footer-brand-name {
-  font-family: var(--font-serif);
-  font-size: 20px;
-  font-weight: 400;
-  letter-spacing: 0.1em;
-  color: #ddd8ce;
-  margin-bottom: 4px;
-}
-.footer-brand-sub {
-  font-family: var(--font-mono);
-  font-size: 8px;
-  letter-spacing: 0.35em;
-  text-transform: uppercase;
-  color: rgba(221,216,206,0.4);
-  margin-bottom: 20px;
-}
-.footer-brand-copy {
-  font-family: var(--font-serif);
-  font-size: 13px;
-  font-style: italic;
-  color: rgba(221,216,206,0.3);
-  line-height: 1.8;
-  max-width: 260px;
-}
-.footer-col-title {
-  font-family: var(--font-mono);
-  font-size: 9px;
-  letter-spacing: 0.32em;
-  text-transform: uppercase;
-  color: rgba(160,138,92,0.7);
-  margin-bottom: 24px;
-}
-.footer-links { display: flex; flex-direction: column; gap: 12px; }
-.footer-links a {
-  font-family: var(--font-sans);
-  font-size: 13px;
-  font-weight: 300;
-  color: rgba(221,216,206,0.35);
-  text-decoration: none;
-  letter-spacing: 0.04em;
-  transition: color 0.25s;
-}
-.footer-links a:hover { color: #ddd8ce; }
-.footer-bottom {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  padding: 32px var(--pad) 48px;
-  border-top: 1px solid rgba(255,255,255,0.06);
-  gap: 40px;
-  position: relative;
-  z-index: 1;
-}
-.footer-copy {
-  font-family: var(--font-mono);
-  font-size: 9px;
-  letter-spacing: 0.15em;
-  color: rgba(221,216,206,0.2);
-}
-.footer-disclaimer {
-  font-family: var(--font-mono);
-  font-size: 9px;
-  letter-spacing: 0.06em;
-  color: rgba(221,216,206,0.15);
-  max-width: 520px;
-  line-height: 1.8;
-  text-align: right;
-}
-
-/* ═══════════════════════════════════════════════
-   REVEAL ANIMATIONS
-   ═══════════════════════════════════════════════ */
-.rv { opacity: 0; transform: translateY(28px); transition: opacity 0.9s var(--ease), transform 0.9s var(--ease); }
-.rv.in { opacity: 1; transform: none; }
-.d1 { transition-delay: 0.1s; }
-.d2 { transition-delay: 0.2s; }
-.d3 { transition-delay: 0.3s; }
-.d4 { transition-delay: 0.45s; }
-
-/* ═══════════════════════════════════════════════
-   KEYFRAMES
-   ═══════════════════════════════════════════════ */
-@keyframes rise {
-  from { opacity: 0; transform: translateY(28px); }
-  to   { opacity: 1; transform: none; }
-}
-@keyframes scrollPulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.3; }
-}
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.25; }
-}
-@keyframes cycle {
-  0%, 28%   { transform: translateY(0); }
-  33%, 61%  { transform: translateY(-100%); }
-  66%, 94%  { transform: translateY(-200%); }
-  100%      { transform: translateY(-300%); }
-}
-
-/* ═══════════════════════════════════════════════
-   RESPONSIVE
-   ═══════════════════════════════════════════════ */
-@media (max-width: 1024px) {
-  :root { --pad: 36px; }
-  .nav { padding: 20px 36px; }
-  .about-grid { grid-template-columns: 1fr; gap: 52px; }
-  .about-left { position: static; }
-  .mkt-grid { grid-template-columns: 1fr 1fr; }
-  .contact-grid { grid-template-columns: 1fr; gap: 56px; }
-  .footer-main { grid-template-columns: 1fr; gap: 40px; padding: 52px 36px 40px; }
-  .footer-bottom { padding: 28px 36px 40px; flex-direction: column; }
-  .footer-disclaimer { text-align: left; }
-  .value-row { grid-template-columns: 1fr 1fr 1fr; gap: 24px; }
-}
-
-@media (max-width: 768px) {
-  :root { --pad: 24px; }
-  .nav { padding: 16px 24px; }
-  .nav-links {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: var(--bg);
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 32px;
-    z-index: 199;
-  }
-  .nav-links.open { display: flex; }
-  .nav-links a { font-size: 14px; letter-spacing: 0.3em; }
-  .nav-toggle { display: flex; }
-  .hero-headline { font-size: 48px; }
-  .hero-tagline { font-size: 15px; }
-  .clocks { gap: 32px; }
-  .clock-time { font-size: 16px; }
-  .about, .pillars, .markets, .philosophy, .contact { padding: 100px 0; }
-  .pillar-grid { grid-template-columns: 1fr; }
-  .mkt-grid { grid-template-columns: 1fr; }
-  .pillars-top { flex-direction: column; align-items: flex-start; gap: 16px; }
-  .pillars-sub { text-align: left; max-width: none; }
-  .form-wrap { padding: 36px 28px; }
-  .footer-main { padding: 44px 24px 36px; }
-  .footer-bottom { padding: 24px 24px 36px; }
-  .value-row { grid-template-columns: 1fr; gap: 36px; }
+@media(max-width:768px){
+  .nav{padding:18px 24px}
+  .nav-links{display:none}
+  .wrap{padding:0 24px}
+  .rule{margin:0 24px}
+  .hero{padding:0 24px}
+  .hero-headline{font-size:52px}
+  .hero-headline-sub{font-size:28px}
+  .clocks{gap:28px}
+  .clock-time{font-size:15px}
+  .about,.pillars,.markets,.philosophy,.contact{padding:88px 0}
+  .mkt-grid{grid-template-columns:1fr}
+  .pillars-top{flex-direction:column;align-items:flex-start;gap:16px}
+  .pillars-sub{text-align:left;max-width:none}
+  .form-wrap{padding:36px 28px}
+  .footer-main{padding:44px 24px 36px}
+  .footer-bottom{padding:24px 24px 36px}
 }
 </style>
 </head>
 <body>
 
-<!-- ═══════════════════════════════════════════════
-     NAVIGATION
-     ═══════════════════════════════════════════════ -->
-<nav class="nav" id="mainNav">
-  <a href="#" class="nav-left">
+<!-- NAV -->
+<nav class="nav">
+  <a href="#" class="nav-logo">
     <span class="nav-logo-name">Calma Capital</span>
     <span class="nav-logo-tag">Private Investment</span>
   </a>
-  <div class="nav-links" id="navLinks">
+  <div class="nav-links">
     <a href="#about">About</a>
     <a href="#pillars">Pillars</a>
     <a href="#markets">Markets</a>
-    <a href="https://www.instagram.com/calmacapital" target="_blank" rel="noopener">Instagram</a>
-    <a href="#contact" class="nav-contact-btn">Contact</a>
+    <a href="https://www.instagram.com/calmacapital?igsh=YnkyejBhbWd4azBu" target="_blank" class="nav-ig" title="Instagram">
+      <svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:currentColor;display:block"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+    </a>
+    <a href="#contact" class="nav-contact">Contact</a>
   </div>
-  <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
-    <span></span><span></span><span></span>
-  </button>
 </nav>
 
-<!-- ═══════════════════════════════════════════════
-     HERO
-     ═══════════════════════════════════════════════ -->
-<section class="hero" id="hero">
-  <div class="hero-bg">
-    <svg viewBox="0 0 1440 800" preserveAspectRatio="xMidYMid slice" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <!-- Grid -->
-      <defs>
-        <pattern id="heroGrid" width="80" height="80" patternUnits="userSpaceOnUse">
-          <path d="M 80 0 L 0 0 0 80" fill="none" stroke="#1a1a1a" stroke-width="0.3" opacity="0.15"/>
-        </pattern>
-      </defs>
-      <rect width="1440" height="800" fill="url(#heroGrid)"/>
-      <!-- Contour lines -->
-      <path d="M0,700 C200,680 400,620 600,640 C800,660 1000,600 1200,620 C1350,630 1440,610 1440,610" stroke="#1a1a1a" stroke-width="0.6" fill="none" opacity="0.12"/>
-      <path d="M0,640 C180,610 360,560 540,580 C720,600 900,540 1100,560 C1300,580 1440,550 1440,550" stroke="#1a1a1a" stroke-width="0.6" fill="none" opacity="0.1"/>
-      <path d="M0,580 C160,540 320,500 480,520 C640,540 800,480 1000,500 C1200,520 1380,490 1440,490" stroke="#1a1a1a" stroke-width="0.5" fill="none" opacity="0.09"/>
-      <path d="M0,520 C200,470 400,440 600,460 C800,480 1000,420 1200,440 C1360,455 1440,430 1440,430" stroke="#1a1a1a" stroke-width="0.5" fill="none" opacity="0.08"/>
-      <path d="M0,460 C220,400 440,380 660,400 C880,420 1060,360 1260,380 C1380,390 1440,370 1440,370" stroke="#1a1a1a" stroke-width="0.5" fill="none" opacity="0.07"/>
-      <path d="M0,400 C180,340 360,320 560,340 C760,360 960,300 1160,320 C1320,335 1440,310 1440,310" stroke="#1a1a1a" stroke-width="0.4" fill="none" opacity="0.06"/>
-      <path d="M0,340 C200,280 400,260 600,280 C800,300 1000,240 1200,260 C1350,275 1440,250 1440,250" stroke="#1a1a1a" stroke-width="0.4" fill="none" opacity="0.05"/>
-      <!-- Mountain silhouettes -->
-      <path d="M400,500 L480,280 L560,460" stroke="#1a1a1a" stroke-width="0.5" fill="none" opacity="0.08"/>
-      <path d="M700,520 L800,300 L900,480" stroke="#1a1a1a" stroke-width="0.5" fill="none" opacity="0.06"/>
-      <path d="M1000,540 L1080,340 L1160,500" stroke="#1a1a1a" stroke-width="0.4" fill="none" opacity="0.05"/>
-      <!-- Crosshairs -->
-      <g stroke="#1a1a1a" stroke-width="0.4" opacity="0.08">
-        <line x1="300" y1="380" x2="340" y2="380"/><line x1="320" y1="360" x2="320" y2="400"/>
-        <line x1="700" y1="340" x2="740" y2="340"/><line x1="720" y1="320" x2="720" y2="360"/>
-        <line x1="1100" y1="400" x2="1140" y2="400"/><line x1="1120" y1="380" x2="1120" y2="420"/>
-      </g>
-    </svg>
-  </div>
-  <div class="hero-grid"></div>
+<!-- HERO -->
+<section class="hero">
+  <canvas id="heroCanvas"></canvas>
+  <div class="hero-veil"></div>
 
-  <div class="hero-content">
+  <div class="hero-body">
     <div class="hero-geo">
-      <div class="hero-geo-flag">
-        <svg viewBox="0 0 18 13" xmlns="http://www.w3.org/2000/svg">
-          <rect width="18" height="13" fill="#f5f3ef" rx="1"/>
-          <rect x="0" y="0" width="18" height="4.33" fill="#2d4a3e" rx="1"/>
-          <rect x="0" y="8.67" width="18" height="4.33" fill="#2d4a3e" rx="1"/>
-          <rect x="0" y="4.33" width="18" height="4.33" fill="#c63a3a" rx="0"/>
-          <path d="M9 6.5l0.8-0.6 0.8 0.6-0.8 0.6z" fill="#f5f3ef"/>
-        </svg>
-      </div>
-      <span class="hero-geo-text">ALUVA, KERALA</span>
-      <span class="geo-sep">·</span>
-      <span class="hero-geo-coords">10.1004°N, 76.3519°E</span>
+      <div class="geo-dot"></div>
+      <span>10.1004° N, 76.3519° E</span>
+      <span style="opacity:.35">·</span>
+      <span>ALUVA, KERALA</span>
     </div>
 
-    <h1 class="hero-headline">
-      A private<br>investment firm,
-    </h1>
-    <h1 class="hero-headline" style="animation-delay: 0.6s;">
-      building <span class="italic-word">discipline</span>
-    </h1>
-
-    <p class="hero-tagline">
-      Disciplined research. Selective opportunity.<br>
-      Long-term capital stewardship.
-    </p>
+    <h1 class="hero-headline">Calma<br>Capital</h1>
+    <p class="hero-headline-sub">Private Investment Firm</p>
 
     <div class="hero-phrase">
       <div class="word-cycle">
@@ -1180,12 +745,12 @@ footer {
     </div>
 
     <div class="hero-ctas">
-      <a href="#contact" class="btn-primary">Contact the Firm</a>
-      <a href="#about" class="btn-secondary">Learn More</a>
+      <a href="#contact" class="btn-cc">Contact the Firm</a>
+      <a href="#about" class="btn-ghost">Learn More</a>
     </div>
   </div>
 
-  <div class="hero-bottom">
+  <div class="hero-footer-bar">
     <div class="clocks">
       <div class="clock-item">
         <div class="clock-city">Kochi</div>
@@ -1203,225 +768,182 @@ footer {
         <div class="clock-tz">GMT · UTC+0</div>
       </div>
     </div>
-    <div class="scroll-indicator">
-      <div class="scroll-line"></div>
-      <span class="scroll-text">Scroll</span>
+    <div class="hero-scroll">
+      <div class="scroll-bar"></div>
+      <span class="scroll-txt">Scroll</span>
     </div>
   </div>
 </section>
 
-<div class="section-rule"></div>
+<div class="rule"></div>
 
-<!-- ═══════════════════════════════════════════════
-     ABOUT
-     ═══════════════════════════════════════════════ -->
+<!-- ABOUT -->
 <section class="about" id="about">
-  <div class="section-wrap">
+  <div class="wrap">
     <div class="about-grid">
+
       <div class="about-left rv">
-        <div class="about-kicker"><span class="label">The Firm</span></div>
+        <div class="about-kicker"><span class="lbl">The Firm</span></div>
         <h2 class="about-title">
           Private.<br>Disciplined.
-          <em>Est. in the pursuit<br>of long-term capital.</em>
+          <em>Built for the long arc<br>of capital.</em>
         </h2>
         <div class="about-sig">— Calma Capital</div>
       </div>
 
       <div class="about-right">
         <p class="about-p rv">
-          <strong>Calma Capital</strong> is a private investment firm built around disciplined research, selective opportunity, and long-term capital preservation. The firm combines macro awareness, market structure analysis, and risk-first execution across a focused set of instruments.
+          <b>Calma Capital</b> is a private investment firm built around disciplined research, selective opportunity, and long-term capital stewardship. The firm operates across U.S. index futures and metals, combining deep market structure analysis with a risk-first execution framework.
         </p>
         <div class="about-rule rv d1"></div>
         <p class="about-p rv d1">
-          We operate at the intersection of <strong>institutional rigor</strong> and private-client discretion. Every position is the result of structured analysis — not reaction, not sentiment, and never speculation for its own sake.
+          We operate at the intersection of <b>institutional precision</b> and private-client discretion. Every position begins with structure — not reaction, not sentiment, and never speculation for its own sake.
         </p>
         <p class="about-p rv d2">
-          Our focus is narrow by design. U.S. equities and metals represent deep, liquid markets with consistent structural behavior. Depth of knowledge in fewer instruments is the foundation of a durable edge — not the breadth of exposure.
+          Our focus is narrow by design. <b>NQ index futures</b> and <b>XAUUSD</b> represent two of the deepest, most institutionally-driven markets in the world. Mastery of fewer instruments is the foundation of a durable edge.
         </p>
         <p class="about-p rv d3">
-          <strong>Capital preservation comes before capital growth.</strong> That is not a constraint — it is the strategy.
+          <b>Capital preservation precedes capital growth.</b> That is not a limitation — it is the entire strategy.
         </p>
       </div>
+
     </div>
   </div>
 </section>
 
-<div class="section-rule"></div>
+<div class="rule"></div>
 
-<!-- ═══════════════════════════════════════════════
-     PILLARS
-     ═══════════════════════════════════════════════ -->
+<!-- PILLARS -->
 <section class="pillars" id="pillars">
-  <div class="section-wrap">
+  <div class="wrap">
     <div class="pillars-top rv">
       <div>
-        <span class="label">Core Approach</span>
-        <h2 class="pillars-headline">Our pillars</h2>
+        <span class="lbl">Core Approach</span>
+        <h2 class="pillars-headline">Three Pillars<br>of the Firm</h2>
       </div>
-      <p class="pillars-sub">Three pillars, one firm. Disciplined capital, structured research, and uncompromising risk management.</p>
+      <p class="pillars-sub">The framework that governs every capital decision made under this firm.</p>
     </div>
 
-    <div class="pillar-grid">
-      <div class="pillar-card rv">
-        <div class="pillar-card-icon">I</div>
-        <div class="pillar-card-num">01 · Private Investment</div>
-        <h3 class="pillar-card-title">Private<br>Investment</h3>
-        <p class="pillar-card-desc">Selective capital allocation with a long-term view. We pursue asymmetric opportunities in markets we understand deeply — with patience as a strategic advantage, not a constraint.</p>
-        <div class="pillar-card-tags">
-          <span class="pillar-card-tag">Long-term horizon</span>
-          <span class="pillar-card-tag">Selective allocation</span>
-          <span class="pillar-card-tag">Asymmetric returns</span>
+    <div class="pillar-list">
+
+      <div class="pillar open rv">
+        <div class="pillar-head" onclick="togglePillar(this)">
+          <span class="pillar-index">01</span>
+          <span class="pillar-name">Private Investment</span>
+          <div class="pillar-toggle">+</div>
+        </div>
+        <div class="pillar-body">
+          <div class="pillar-body-inner">
+            <p class="pillar-desc">Selective capital allocation with a long-term view. We pursue asymmetric opportunities in markets we understand deeply — with patience as a structural advantage, not a constraint. Entry is earned, not assumed.</p>
+            <div class="pillar-tags">
+              <span class="pillar-tag">Long-term horizon</span>
+              <span class="pillar-tag">Selective allocation</span>
+              <span class="pillar-tag">Asymmetric opportunity</span>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div class="pillar-card rv d1">
-        <div class="pillar-card-icon">II</div>
-        <div class="pillar-card-num">02 · Research &amp; Strategy</div>
-        <h3 class="pillar-card-title">Research &amp;<br>Strategy</h3>
-        <p class="pillar-card-desc">Market structure, volatility analysis, and macro awareness. Every thesis is built from the ground up — primary research, not consensus. We look for what the market has already priced incorrectly.</p>
-        <div class="pillar-card-tags">
-          <span class="pillar-card-tag">Volume Profile</span>
-          <span class="pillar-card-tag">Market structure</span>
-          <span class="pillar-card-tag">Macro awareness</span>
+      <div class="pillar rv d1">
+        <div class="pillar-head" onclick="togglePillar(this)">
+          <span class="pillar-index">02</span>
+          <span class="pillar-name">Research &amp; Strategy</span>
+          <div class="pillar-toggle">+</div>
+        </div>
+        <div class="pillar-body">
+          <div class="pillar-body-inner">
+            <p class="pillar-desc">Volume Profile-driven market analysis. We read where institutional business was transacted — Point of Control, Value Area, Low Volume Nodes — and position relative to that structural truth, not moving averages or indicators.</p>
+            <div class="pillar-tags">
+              <span class="pillar-tag">Volume Profile</span>
+              <span class="pillar-tag">Market structure</span>
+              <span class="pillar-tag">Macro awareness</span>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div class="pillar-card rv d2">
-        <div class="pillar-card-icon">III</div>
-        <div class="pillar-card-num">03 · Risk Discipline</div>
-        <h3 class="pillar-card-title">Risk<br>Discipline</h3>
-        <p class="pillar-card-desc">Capital preservation, controlled exposure, and process-led execution. Risk management is not reactive — it is embedded into every stage of the investment process, before a position is entered.</p>
-        <div class="pillar-card-tags">
-          <span class="pillar-card-tag">Capital preservation</span>
-          <span class="pillar-card-tag">Controlled exposure</span>
-          <span class="pillar-card-tag">Process execution</span>
+      <div class="pillar rv d2">
+        <div class="pillar-head" onclick="togglePillar(this)">
+          <span class="pillar-index">03</span>
+          <span class="pillar-name">Risk Discipline</span>
+          <div class="pillar-toggle">+</div>
+        </div>
+        <div class="pillar-body">
+          <div class="pillar-body-inner">
+            <p class="pillar-desc">Capital preservation, controlled exposure, and process-led execution. Risk management is not reactive — it is embedded at every stage before a position is entered. The process is the protection.</p>
+            <div class="pillar-tags">
+              <span class="pillar-tag">Capital preservation</span>
+              <span class="pillar-tag">Controlled exposure</span>
+              <span class="pillar-tag">Process-led execution</span>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div class="pillar-card rv d3">
-        <div class="pillar-card-icon">⬡</div>
-        <div class="pillar-card-num">Global Reach</div>
-        <h3 class="pillar-card-title">Institutional-<br>Grade Operations</h3>
-        <p class="pillar-card-desc">Capital moves fastest when discipline governs its flow. Compliance, risk, and execution in one market-agnostic foundation — operating across sessions and geographies.</p>
-        <div class="pillar-card-tags">
-          <span class="pillar-card-tag">Multi-session</span>
-          <span class="pillar-card-tag">Global mandate</span>
-          <span class="pillar-card-tag">Institutional execution</span>
-        </div>
-      </div>
     </div>
   </div>
 </section>
 
-<div class="section-rule"></div>
+<div class="rule"></div>
 
-<!-- ═══════════════════════════════════════════════
-     MARKETS
-     ═══════════════════════════════════════════════ -->
+<!-- MARKETS -->
 <section class="markets" id="markets">
-  <div class="section-wrap">
+  <div class="wrap">
     <div class="markets-top rv">
-      <span class="label">Market Focus</span>
+      <span class="lbl">Market Focus</span>
       <h2 class="markets-headline">Instruments &amp; Markets</h2>
     </div>
-
     <div class="mkt-grid">
+
       <div class="mkt-card rv">
-        <span class="mkt-ticker">SPY / QQQ</span>
-        <div class="mkt-name">U.S. Equities</div>
-        <p class="mkt-desc">Large-cap and index-based exposure to American equity markets. Structural behavior, earnings cycles, and macro positioning drive every allocation.</p>
+        <span class="mkt-ticker">NQ · CME</span>
+        <div class="mkt-name">Nasdaq 100<br>Futures</div>
+        <p class="mkt-desc">Technology-driven equity index futures traded on the CME. Precision positioning using Volume Profile structure across New York session opens and intraday ranges.</p>
         <div class="mkt-session"><div class="session-dot"></div>New York Session · EST</div>
       </div>
 
       <div class="mkt-card rv d1">
-        <span class="mkt-ticker">XAU</span>
-        <div class="mkt-name">Gold</div>
-        <p class="mkt-desc">The institutional reserve asset. Positioned around macro cycles, real rate shifts, and monetary policy transitions. The anchor of a disciplined portfolio.</p>
+        <span class="mkt-ticker">XAUUSD · CFD</span>
+        <div class="mkt-name">Gold<br>CFD</div>
+        <p class="mkt-desc">The primary monetary metal. Traded via CFD instruments on institutional platforms. Positioned around real rate cycles, macro shifts, and volume-confirmed structural levels.</p>
         <div class="mkt-session"><div class="session-dot"></div>London &amp; NY Overlap</div>
       </div>
 
       <div class="mkt-card rv d2">
-        <span class="mkt-ticker">XAG</span>
-        <div class="mkt-name">Silver</div>
-        <p class="mkt-desc">Industrial and monetary hybrid. Monitored for premium/discount cycles relative to gold and macro demand signals. Higher beta, higher conviction.</p>
-        <div class="mkt-session"><div class="session-dot"></div>Multi-session</div>
-      </div>
-
-      <div class="mkt-card rv d1">
-        <span class="mkt-ticker">NQ · CME</span>
-        <div class="mkt-name">Index Futures</div>
-        <p class="mkt-desc">Nasdaq 100 futures for tactical positioning across technology-driven equity cycles. Precision execution via Volume Profile structure.</p>
-        <div class="mkt-session"><div class="session-dot"></div>New York Session · EST</div>
-      </div>
-
-      <div class="mkt-card rv d2">
-        <span class="mkt-ticker">ALTS</span>
-        <div class="mkt-name">Alternatives</div>
-        <p class="mkt-desc">Select alternative exposures where structural opportunity is identified — managed with the same risk-first framework that governs all positions.</p>
-        <div class="mkt-session"><div class="session-dot"></div>As needed</div>
-      </div>
-
-      <div class="mkt-card rv d3">
-        <span class="mkt-ticker">GLOBAL</span>
-        <div class="mkt-name">Session Coverage</div>
-        <p class="mkt-desc">Active across London and New York sessions. Session opens, initial balance, and overnight range extensions are primary analytical anchors.</p>
+        <span class="mkt-ticker">MULTI-SESSION</span>
+        <div class="mkt-name">Global<br>Sessions</div>
+        <p class="mkt-desc">Active across London and New York sessions. Session opens, initial balance, and overnight range extensions are primary analytical anchors for timing and positioning.</p>
         <div class="mkt-session"><div class="session-dot"></div>London Open · NY Open</div>
       </div>
+
     </div>
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════════
-     PHILOSOPHY / QUOTE
-     ═══════════════════════════════════════════════ -->
+<!-- PHILOSOPHY -->
 <section class="philosophy">
-  <div class="section-wrap">
+  <div class="wrap">
     <div class="phil-rule rv"></div>
     <span class="phil-open rv">"</span>
     <blockquote class="phil-quote rv">
       Capital is preserved by <em>discipline</em><br>before it is grown by opportunity.
     </blockquote>
     <p class="phil-attr rv d1">The founding principle — Calma Capital</p>
-
-    <div class="value-row rv d2">
-      <div class="value-item">
-        <div class="value-icon">
-          <svg viewBox="0 0 36 36"><circle cx="18" cy="18" r="15" stroke-dasharray="3 2"/><path d="M18 6v24M6 18h24" opacity="0.4"/><circle cx="18" cy="18" r="4"/></svg>
-        </div>
-        <div class="value-title">Precision</div>
-        <div class="value-desc">Structured analysis with strong predictive capabilities across market regimes.</div>
-      </div>
-      <div class="value-item">
-        <div class="value-icon">
-          <svg viewBox="0 0 36 36"><path d="M18 4l3 8h8l-6.5 5 2.5 8L18 20l-7 5 2.5-8L7 12h8z" stroke-linejoin="round"/></svg>
-        </div>
-        <div class="value-title">Excellence</div>
-        <div class="value-desc">Carefully curated investment strategies that create durable financial outcomes.</div>
-      </div>
-      <div class="value-item">
-        <div class="value-icon">
-          <svg viewBox="0 0 36 36"><path d="M18 6l12 6v10c0 6-5 9-12 12-7-3-12-6-12-12V12z" stroke-linejoin="round"/></svg>
-        </div>
-        <div class="value-title">Discipline</div>
-        <div class="value-desc">Process over emotion. Structure over speculation. Patience over reaction.</div>
-      </div>
-    </div>
   </div>
 </section>
 
-<div class="section-rule"></div>
+<div class="rule"></div>
 
-<!-- ═══════════════════════════════════════════════
-     CONTACT
-     ═══════════════════════════════════════════════ -->
+<!-- CONTACT -->
 <section class="contact" id="contact">
-  <div class="section-wrap">
+  <div class="wrap">
     <div class="contact-grid">
+
       <div class="rv">
-        <span class="label">Enquiries</span>
+        <span class="lbl">Enquiries</span>
         <h2 class="contact-title">
           Private<br>Access
-          <em>For qualified enquiries only.</em>
+          <em>Qualified enquiries only.</em>
         </h2>
         <p class="contact-body">Calma Capital engages with a limited number of clients and counterparties at any given time. All correspondence is handled directly and with full discretion.</p>
 
@@ -1450,7 +972,7 @@ footer {
             </div>
             <div>
               <div class="c-lbl">Base</div>
-              <div class="c-val">Private — Global Mandate</div>
+              <div class="c-val">Aluva, Kerala — Global Mandate</div>
             </div>
           </div>
         </div>
@@ -1485,26 +1007,26 @@ footer {
           </div>
         </div>
       </div>
+
     </div>
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════════
-     FOOTER
-     ═══════════════════════════════════════════════ -->
+<!-- FOOTER -->
 <footer>
-  <svg class="footer-topo" viewBox="0 0 1440 300" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M0,260 C120,240 240,220 360,230 C480,240 600,260 720,250 C840,240 960,210 1080,220 C1200,230 1320,250 1440,240 L1440,300 L0,300 Z" stroke="#a08a5c" stroke-width="0.8" fill="none" opacity="0.5"/>
-    <path d="M0,235 C100,215 220,195 360,205 C500,215 620,238 740,228 C860,218 980,188 1100,198 C1220,208 1340,230 1440,220 L1440,300 L0,300 Z" stroke="#a08a5c" stroke-width="0.5" fill="none" opacity="0.35"/>
-    <path d="M0,210 C140,188 280,168 420,180 C560,192 660,220 800,208 C940,196 1060,165 1200,176 C1320,185 1390,205 1440,200 L1440,300 L0,300 Z" stroke="#a08a5c" stroke-width="0.4" fill="none" opacity="0.2"/>
-    <path d="M0,185 C160,162 320,140 480,154 C640,168 720,198 880,186 C1040,174 1140,142 1300,154 C1380,160 1420,176 1440,180 L1440,300 L0,300 Z" stroke="#a08a5c" stroke-width="0.3" fill="none" opacity="0.12"/>
+  <!-- Topographic SVG -->
+  <svg class="footer-topo" viewBox="0 0 1440 220" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M0,180 C120,160 240,140 360,150 C480,160 600,180 720,170 C840,160 960,130 1080,140 C1200,150 1320,170 1440,160 L1440,220 L0,220 Z" stroke="#a08a5c" stroke-width="0.8" fill="none" opacity="0.5"/>
+    <path d="M0,155 C100,135 220,115 360,125 C500,135 620,158 740,148 C860,138 980,108 1100,118 C1220,128 1340,150 1440,140 L1440,220 L0,220 Z" stroke="#a08a5c" stroke-width="0.5" fill="none" opacity="0.35"/>
+    <path d="M0,130 C140,108 280,88 420,100 C560,112 660,140 800,128 C940,116 1060,85 1200,96 C1320,105 1390,125 1440,120 L1440,220 L0,220 Z" stroke="#a08a5c" stroke-width="0.4" fill="none" opacity="0.2"/>
+    <path d="M0,105 C160,82 320,60 480,74 C640,88 720,118 880,106 C1040,94 1140,62 1300,74 C1380,80 1420,96 1440,100 L1440,220 L0,220 Z" stroke="#a08a5c" stroke-width="0.3" fill="none" opacity="0.12"/>
   </svg>
 
   <div class="footer-main">
     <div>
       <div class="footer-brand-name">Calma Capital</div>
       <div class="footer-brand-sub">Private Investment Firm</div>
-      <p class="footer-brand-copy">Disciplined research, selective opportunity, and long-term capital stewardship across U.S. equities and metals.</p>
+      <p class="footer-brand-copy">Disciplined research, selective opportunity, and long-term capital stewardship across U.S. index futures and metals.</p>
     </div>
     <div>
       <div class="footer-col-title">Navigation</div>
@@ -1513,7 +1035,6 @@ footer {
         <a href="#pillars">Pillars</a>
         <a href="#markets">Markets</a>
         <a href="#contact">Contact</a>
-        <a href="https://www.instagram.com/calmacapital" target="_blank" rel="noopener">Instagram</a>
       </div>
     </div>
     <div>
@@ -1525,56 +1046,30 @@ footer {
         <a href="mailto:calmacapitalfirm@gmail.com">calmacapitalfirm@gmail.com</a>
       </div>
     </div>
+    <div>
+      <div class="footer-col-title">Follow</div>
+      <div class="footer-links">
+        <a href="https://www.instagram.com/calmacapital?igsh=YnkyejBhbWd4azBu" target="_blank" style="display:flex;align-items:center;gap:10px;">
+          <svg viewBox="0 0 24 24" style="width:13px;height:13px;fill:currentColor;flex-shrink:0;opacity:.6"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+          @calmacapital
+        </a>
+      </div>
+    </div>
   </div>
 
   <div class="footer-bottom">
-    <div class="footer-copy">© 2026 Calma Capital. All rights reserved.</div>
-    <div class="footer-disclaimer">This website is for informational purposes only and does not constitute investment advice, an offer to sell, or a solicitation to buy any security. Past performance is not indicative of future results. All investment involves risk, including the possible loss of principal.</div>
+    <div class="footer-copy">© 2025 Calma Capital. All rights reserved.</div>
+    <div class="footer-disclaimer">This website is for informational purposes only and does not constitute investment advice, an offer to sell, or a solicitation to buy any security or financial instrument. Past performance is not indicative of future results. All investment involves risk, including the possible loss of principal.</div>
   </div>
 </footer>
 
-<!-- ═══════════════════════════════════════════════
-     SCRIPTS
-     ═══════════════════════════════════════════════ -->
 <script>
-/* ── NAVIGATION SCROLL EFFECT ──────────────────── */
-const nav = document.getElementById('mainNav');
-window.addEventListener('scroll', () => {
-  nav.classList.toggle('scrolled', window.scrollY > 40);
-});
-
-/* ── MOBILE NAV TOGGLE ─────────────────────────── */
-const navToggle = document.getElementById('navToggle');
-const navLinks = document.getElementById('navLinks');
-navToggle.addEventListener('click', () => {
-  navLinks.classList.toggle('open');
-  const spans = navToggle.querySelectorAll('span');
-  if (navLinks.classList.contains('open')) {
-    spans[0].style.transform = 'rotate(45deg) translate(4px, 4px)';
-    spans[1].style.opacity = '0';
-    spans[2].style.transform = 'rotate(-45deg) translate(4px, -4px)';
-  } else {
-    spans[0].style.transform = 'none';
-    spans[1].style.opacity = '1';
-    spans[2].style.transform = 'none';
-  }
-});
-navLinks.querySelectorAll('a').forEach(a => {
-  a.addEventListener('click', () => {
-    navLinks.classList.remove('open');
-    const spans = navToggle.querySelectorAll('span');
-    spans[0].style.transform = 'none';
-    spans[1].style.opacity = '1';
-    spans[2].style.transform = 'none';
-  });
-});
-
-/* ── LIVE CLOCKS ───────────────────────────────── */
-function updateClocks() {
+/* ── LIVE CLOCKS ─────────────────────────────────── */
+function updateClocks(){
   const now = new Date();
-  const fmt = (tz) => new Intl.DateTimeFormat('en-GB', {
-    hour: '2-digit', minute: '2-digit', second: '2-digit',
-    hour12: false, timeZone: tz
+  const fmt = (tz) => new Intl.DateTimeFormat('en-GB',{
+    hour:'2-digit',minute:'2-digit',second:'2-digit',
+    hour12:false,timeZone:tz
   }).format(now);
   document.getElementById('clk-kochi').textContent = fmt('Asia/Kolkata');
   document.getElementById('clk-ny').textContent    = fmt('America/New_York');
@@ -1583,46 +1078,86 @@ function updateClocks() {
 updateClocks();
 setInterval(updateClocks, 1000);
 
-/* ── SCROLL REVEAL ─────────────────────────────── */
-const io = new IntersectionObserver(entries => {
-  entries.forEach(e => {
-    if (e.isIntersecting) {
-      e.target.classList.add('in');
-      io.unobserve(e.target);
-    }
-  });
-}, { threshold: 0.1 });
-document.querySelectorAll('.rv').forEach(el => io.observe(el));
+/* ── CANVAS HERO ─────────────────────────────────── */
+(function(){
+  const c = document.getElementById('heroCanvas');
+  const ctx = c.getContext('2d');
+  let W, H, nodes;
 
-/* ── CONTACT FORM ──────────────────────────────── */
-function submitForm() {
-  const name   = document.getElementById('f-name').value.trim();
-  const email  = document.getElementById('f-email').value.trim();
-  const nature = document.getElementById('f-nature').value.trim();
-  const msg    = document.getElementById('f-msg').value.trim();
-  if (!name || !email) {
+  function resize(){
+    W = c.width  = c.offsetWidth;
+    H = c.height = c.offsetHeight;
+    init();
+  }
+
+  function init(){
+    nodes = Array.from({length:6},(_,i)=>({
+      y: H*(0.2 + i*0.12),
+      pts: Array.from({length:100},(_,j)=>({
+        x:(W/99)*j,
+        base:(Math.random()-.5)*50,
+        vy:(Math.random()-.5)*.3,
+        phase:Math.random()*Math.PI*2
+      })),
+      a: .03+Math.random()*.05,
+      spd:.15+Math.random()*.25
+    }));
+  }
+
+  let t=0;
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    t+=.003;
+    nodes.forEach(n=>{
+      ctx.beginPath();
+      n.pts.forEach((p,i)=>{
+        const wave = Math.sin(t*n.spd+i*.07+p.phase)*20+p.base*.25;
+        const y = n.y+wave;
+        i===0?ctx.moveTo(p.x,y):ctx.lineTo(p.x,y);
+      });
+      ctx.strokeStyle=`rgba(160,138,92,${n.a})`;
+      ctx.lineWidth=.7;
+      ctx.stroke();
+    });
+    requestAnimationFrame(draw);
+  }
+  window.addEventListener('resize',resize);
+  resize(); draw();
+})();
+
+/* ── PILLAR ACCORDION ────────────────────────────── */
+function togglePillar(head){
+  const pillar = head.closest('.pillar');
+  const isOpen = pillar.classList.contains('open');
+  document.querySelectorAll('.pillar').forEach(p=>p.classList.remove('open'));
+  if(!isOpen) pillar.classList.add('open');
+}
+
+/* ── SCROLL REVEAL ───────────────────────────────── */
+const io = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}});
+},{threshold:.1});
+document.querySelectorAll('.rv').forEach(el=>io.observe(el));
+
+/* ── CONTACT FORM ────────────────────────────────── */
+function submitForm(){
+  const name    = document.getElementById('f-name').value.trim();
+  const email   = document.getElementById('f-email').value.trim();
+  const nature  = document.getElementById('f-nature').value.trim();
+  const msg     = document.getElementById('f-msg').value.trim();
+  if(!name||!email){
     alert('Please enter your name and email address.');
     return;
   }
-  const subject = encodeURIComponent('Calma Capital Enquiry — ' + nature);
+  // Build mailto link
+  const subject = encodeURIComponent('Calma Capital Enquiry — '+nature);
   const body = encodeURIComponent(
-    'Name: ' + name + '\nEmail: ' + email + '\nNature: ' + nature + '\n\nMessage:\n' + msg
+    'Name: '+name+'\nEmail: '+email+'\nNature: '+nature+'\n\nMessage:\n'+msg
   );
-  window.location.href = 'mailto:calmacapitalfirm@gmail.com?subject=' + subject + '&body=' + body;
-  document.getElementById('formContent').style.display = 'none';
+  window.location.href='mailto:calmacapitalfirm@gmail.com?subject='+subject+'&body='+body;
+  document.getElementById('formContent').style.display='none';
   document.getElementById('formSuccess').classList.add('visible');
 }
-
-/* ── SMOOTH ANCHOR SCROLL ──────────────────────── */
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-  anchor.addEventListener('click', function(e) {
-    const target = document.querySelector(this.getAttribute('href'));
-    if (target) {
-      e.preventDefault();
-      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  });
-});
 </script>
 </body>
 </html>
